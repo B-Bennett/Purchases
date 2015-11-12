@@ -23,8 +23,26 @@ public class PurchasesController {
     @PostConstruct
     public void init() {
 
+        if (customers.count() == 0) {  //Make it so this only happens when the repositories are empty
+            String fileContent = readFile("customers.csv");
+
+            String[] lines = fileContent.split("\n");
+            for (String line : lines) {
+                if (line == lines[0])
+                    continue;
+                String[] columns = line.split(",");
+                Customer customer = new Customer();
+
+                customer.name = columns[0];
+                customer.email = columns[1];
+                customers.save(customer);
+            }
+
+        }
+
         if (purchases.count() == 0) {  //Make it so this only happens when the repositories are empty
             String fileContent = readFile("purchases.csv");
+
             String[] lines = fileContent.split("\n");
             for (String line : lines) {
                 if (line == lines[0])
@@ -39,60 +57,30 @@ public class PurchasesController {
                 purchase.cvv = columns[3];
                 purchase.category = columns[4];
 
-                int customerId = Integer.valueOf(columns[0]);
+                /*int customerId = Integer.valueOf(columns[0]);
                 purchase.customer = customers.findOne(customerId);
                 purchases.save(purchase);
-            }
-        }
-        /*if (purchases.count() == 0) {
-            String fileContent = readFile("purchases.csv");
-            String[] lines = fileContent.split("\n");
-            for (String line : lines) {
-                if (line == lines[0])
-                    continue;
-
-                String[] columns = line.split(",");
-                Purchase purchase = new Purchase();
-
-                purchase.date = columns[1];
-                purchase.creditCard = columns[2];
-                purchase.cvv = columns[3];
-                purchase.category = columns[4];
-                int customerId = Integer.valueOf(columns[0]);
-                Customer customer = customers.findOne(customerId);
+*/
+                Customer customer = customers.findOne(Integer.valueOf(columns[0]));
                 purchase.customer = customer;
+
                 purchases.save(purchase);
             }
-        }*/
-        if (customers.count() == 0) {  //Make it so this only happens when the repositories are empty
-            String fileContent = readFile("customers.csv");
-            String[] lines = fileContent.split("\n");
-            for (String line : lines) {
-                if (line == lines[0])
-                    continue;
-                String[] columns = line.split(",");
-                Customer customer = new Customer();
-
-                customer.name = columns[0];
-                customer.email = columns[1];
-                customers.save(customer);
-            }
-
         }
     }
 
         @RequestMapping("/")
-        public String home(Model model, String category){
+        public String home(Model model, String category) {
 
 
             if (category != null) {
-                model.addAttribute("customers", customers.findAll());
+                //model.addAttribute("customers", customers.findAll());
+                model.addAttribute("purchases", purchases.findByCategory(category));
+            } else {
                 model.addAttribute("purchases", purchases.findAll());
+                model.addAttribute("customer", customers.findAll());
+
             }
-
-
-            model.addAttribute("customers", customers);
-            model.addAttribute("purchases", purchases.findAll());
             return "home";
         }
 

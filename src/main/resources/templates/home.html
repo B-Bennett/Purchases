@@ -16,20 +16,26 @@
 <br><br>
 
 <table>
+    <tr>
+        <td>Name</td>
+        <td>Email</td>
+        <td>Category</td>
+        <td>Credit Card</td>
+        <td>Cvv</td>
+        <td>Date</td>
+    </tr>
     {{#purchases}}
     <tr>
         {{#customer}}
-        <tr>
             <td>{{name}}</td>
             <td>{{email}}</td>
-        </tr>
         {{/customer}}
-            <tr>
-                <td>{{category}}</td>
-                <td>{{creditCard}}</td>
-                <td>{{cvv}}</td>
-                <td>{{date}}</td>
-            </tr>
+
+            <td>{{category}}</td>
+            <td>{{creditCard}}</td>
+            <td>{{cvv}}</td>
+            <td>{{date}}</td>
+
     </tr>
     {{/purchases}}
 </table>
