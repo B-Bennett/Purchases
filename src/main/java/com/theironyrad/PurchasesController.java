@@ -36,6 +36,26 @@ public class PurchasesController {
             purchase.category = columns[5];
             purchases.save(purchase);
         }
+        /*if (purchases.count() == 0) {
+            String fileContent = readFile("purchases.csv");
+            String[] lines = fileContent.split("\n");
+            for (String line : lines) {
+                if (line == lines[0])
+                    continue;
+
+                String[] columns = line.split(",");
+                Purchase purchase = new Purchase();
+
+                purchase.date = columns[1];
+                purchase.creditCard = columns[2];
+                purchase.cvv = columns[3];
+                purchase.category = columns[4];
+                int customerId = Integer.valueOf(columns[0]);
+                Customer customer = customers.findOne(customerId);
+                purchase.customer = customer;
+                purchases.save(purchase);
+            }
+        }*/
         String fileContent = readFile("customers.csv");
         String[] lines = fileContent.split("\n");
         for (String line : lines) {
@@ -47,7 +67,6 @@ public class PurchasesController {
             customer.email = columns[2];
             customers.save(customer);
         }
-
     }
 
         @RequestMapping("/")
@@ -56,7 +75,7 @@ public class PurchasesController {
     }
 
 
-    static String readFile(String "purchases.csv") {
+    static String readFile(String fileName) {
         File f = new File(fileName);
         try {
             FileReader fr = new FileReader(f);
